@@ -1,4 +1,6 @@
 #! /usr/bin/env python3
+# https://github.com/Marterich/AoC2020/blob/main/Day_07/solve.py
+
 import re, queue
 
 debug = 0
