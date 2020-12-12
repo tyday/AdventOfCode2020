@@ -26,10 +26,10 @@ let search_adapters = (index) => {
         if(current_targets.includes(data[a])){
             val_a = search_adapters(a);
         }
-        if((index+2 < data.length) && (current_targets.includes(data[b]))){
+        if((index+2 < data.length) && (current_targets.includes(data[index + 2]))){
             val_b = search_adapters(a);
         }
-        if((index+3 < data.length) && (current_targets.includes(data[c]))){
+        if((index+3 < data.length) && (current_targets.includes(data[index + 3]))){
             val_c = search_adapters(a);
         }
         let current_values = val_a + val_b + val_c;
@@ -44,7 +44,7 @@ let search_adapters = (index) => {
 
 
 
-var data = fs.readFileSync('/home/pi/Programming/AdventOfCode/2020/Day10/test_input.txt');
+var data = fs.readFileSync('/home/pi/Programming/AdventOfCode/2020/Day10/test_input_short.txt');
 data = data.toString().split('\n')
 data.push('0');
 data = data.map(x => Number(x));
@@ -70,7 +70,7 @@ console.log(data)
 console.log(volt_dict)
 
 let start = Date.now();
-console.log(search_adapters(0));
+console.log('Count:', search_adapters(0));
 console.log(adapter_dict);
 let time = Date.now() - start;
 console.log(time);

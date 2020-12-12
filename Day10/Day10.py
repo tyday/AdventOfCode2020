@@ -1,6 +1,6 @@
 from datetime import datetime
 data = []
-with open('/home/pi/Programming/AdventOfCode/2020/Day10/input.txt','r') as f:
+with open('/home/pi/Programming/AdventOfCode/2020/Day10/test_input_short.txt','r') as f:
     data = [int(i.strip()) for i in f.readlines()]
     data.append(0)
     data.sort()
@@ -45,7 +45,7 @@ def search_adapters(index):
             val_c = search_adapters(c)
 
         current_values = val_a + val_b + val_c
-        #adapter_dict[index] = current_values
+        adapter_dict[index] = current_values
         return current_values
 
 start = datetime.now()
