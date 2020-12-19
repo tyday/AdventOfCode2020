@@ -1,3 +1,6 @@
+from PartTwo.lexer import Lexer
+from PartTwo.parser_ import Parser
+from PartTwo.interpreter import Interpreter
 
 def do_math(input1,input2,modifier):
     if modifier == '*':
@@ -39,6 +42,20 @@ def partOne():
     for line in input:
         total = evaluate_maths(line)
         sum += total
+    print(f"Total: {sum}")
+
+def partTwo():
+    input = ['1 + (2 * 3) + (4 * (5 + 6))']
+    # with open('input.txt', 'r') as f:
+    #     input = f.readlines()
+    for line in input:
+        lexer = Lexer(line)
+        tokens = lexer.generate_tokens()
+        parser = Parser(tokens)
+        tree = parser.parse()
+        interpreter = Interpreter()
+        value = interpreter.visit(tree)
+        sum += value
     print(f"Total: {sum}")
 
 partOne()

@@ -27,19 +27,6 @@ class Parser:
     def expr(self):
         result = self.term()
 
-        while self.current_token != None and self.current_token.type in (TokenType.PLUS, TokenType.MINUS):
-            if self.current_token.type == TokenType.PLUS:
-                self.advance()
-                result = AddNode(result, self.term())
-            elif self.current_token.type == TokenType.MINUS:
-                self.advance()
-                result = SubtractNode(result, self.term())
-        
-        return result
-    
-    def term(self):
-        result = self.factor()
-
         while self.current_token != None and self.current_token.type in (TokenType.MULTIPLY, TokenType.DIVIDE):
             if self.current_token.type == TokenType.MULTIPLY:
                 self.advance()
@@ -47,6 +34,19 @@ class Parser:
             elif self.current_token.type == TokenType.DIVIDE:
                 self.advance()
                 result = DivideNode(result, self.term())
+        
+        return result
+    
+    def term(self):
+        result = self.factor()
+
+        while self.current_token != None and self.current_token.type in (TokenType.PLUS, TokenType.MINUS):
+            if self.current_token.type == TokenType.PLUS:
+                self.advance()
+                result = AddNode(result, self.term())
+            elif self.current_token.type == TokenType.MINUS:
+                self.advance()
+                result = SubtractNode(result, self.term())
         
         return result
     
