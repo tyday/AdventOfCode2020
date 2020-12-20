@@ -23,11 +23,18 @@ def get_reg_ex(rule, rules):
         else:
             return get_reg_ex(rules[rule], rules)
     elif '|' in rule:
-        left = rule.split(' | ')[0]
-        right = rule.split(' | ')[1]
-        left = f"{get_reg_ex(left, rules)}"
-        right = get_reg_ex(right, rules)
-        return f"({left}|{right})"
+        variations = []
+        var_list = rule.split(' | ')
+        for i in range(rule.count('|')+1):
+            variations.append(get_reg_ex(var_list[i], rules))
+
+        # left = rule.split(' | ')[0]
+        # right = rule.split(' | ')[1]
+        # left = f"{get_reg_ex(left, rules)}"
+        # right = get_reg_ex(right, rules)
+        rtnValue = "|".join(variations)
+        return f"({rtnValue})"
+        # return f"({left}|{right})"
     else:
         return_regex = ''
         rule_list = rule.split(' ')
@@ -48,10 +55,10 @@ def partOne(fileName):
 
 def partTwo(fileName):
     rules, messages = get_data(fileName)
-    rules['8'] = '42 | 42 42 42'
-    rules['11'] = '42 31 | 42 42 31 42 31 31'
-    # rules['11'] = '(? 42 (? 42 (? 42 31 )? 31 )? 31 )? 31'
-    # rules['8'] = '42 + '
+    # rules['8'] = '42 | 42 42'
+    # rules['11'] = '42 31 | 42 42 31 31'
+    rules['11'] = '42 31 | 42 42 31 31 | 42 42 42 31 31 31 | 42 42 42 42 31 31 31 31 | 42 42 42 42 42 31 31 31 31 31'
+    rules['8'] = '42 | 42 42 | 42 42 42 | 42 42 42 42 | 42 42 42 42 42'
     reggie = get_reg_ex('0', rules)
     reggie = '^' + reggie + '$'
     count = 0
@@ -62,7 +69,7 @@ def partTwo(fileName):
 
 if __name__ =='__main__':
     # partOne('/home/pi/Programming/AdventOfCode/2020/Day19/input.txt')
-    partTwo('/home/pi/Programming/AdventOfCode/2020/Day19/examplePart2.txt')
+    partTwo('/home/pi/Programming/AdventOfCode/2020/Day19/input.txt')
 
     # 8: 42 | 42 8
     # 11: 42 31 | 42 11 31
