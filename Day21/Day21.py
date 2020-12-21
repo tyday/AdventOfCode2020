@@ -48,8 +48,10 @@ def partOne(fileName):
     # print(allergen_dict)
 
     allergen_set = set()
+    possible_alergen_dict = {}
     for allergen in allergen_dict:
         possibilities = find_allergen_name(allergen, allergen_dict)
+        possible_alergen_dict[allergen] = set(possibilities)
         allergen_set.update(possibilities)
     
     food_set = set()
@@ -68,6 +70,60 @@ def partOne(fileName):
                 count += 1
     
     print(f"The count of times they appear in ingredients: {count}")
+
+    # canonical dangerous ingredient list
+    print('Start of Allergen Dict:')
+    print(possible_alergen_dict)
+
+    # This filters items in the possible alergens from items found to not be allergens
+    # it does nothing
+    for k, v in possible_alergen_dict.items():
+        v = v.difference(food_set.difference(allergen_set))
+    print('Stage 2 of Allergen Dict:')
+    print(possible_alergen_dict)
+
+    # Stage 3
+    # if an allergen has more than one possibility
+    # we compare it to allergens with one possibility
+    # and reduce
+
+    for k, v in possible_alergen_dict.items():
+        if len(v) == 1:
+            for k2, v2 in possible_alergen_dict.items():
+                if k == k2:
+                    pass
+                else:
+                    possible_alergen_dict[k2] = v2.difference(v)
+    
+    print('Stage 3 of Allergen Dict:')
+    print(possible_alergen_dict)
+
+    # Stage 4 -- Repeat stage 3
+    # if an allergen has more than one possibility
+    # we compare it to allergens with one possibility
+    # and reduce
+
+    for k, v in possible_alergen_dict.items():
+        if len(v) == 1:
+            for k2, v2 in possible_alergen_dict.items():
+                if k == k2:
+                    pass
+                else:
+                    possible_alergen_dict[k2] = v2.difference(v)
+    
+    print('Stage 4 of Allergen Dict:')
+    print(possible_alergen_dict)
+
+    canonical_dangerous_ingredient_list = []
+    # [v for k,v in possible_alergen_dict.items()].sort()
+    sorted_allergen_list = sorted(possible_alergen_dict)
+    for allergen in sorted_allergen_list:
+        val = possible_alergen_dict[allergen]
+        for e in val:
+            canonical_dangerous_ingredient_list.append(e)
+    print('Canonical Dangerous ingredient list')
+    # canonical_dangerous_ingredient_list.sort()
+    print(",".join(canonical_dangerous_ingredient_list))
 
 
 
