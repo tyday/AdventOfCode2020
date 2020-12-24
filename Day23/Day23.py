@@ -48,7 +48,7 @@ class Node:
             nxtNode = nxtNode.right
         return rtnString
 
-def move(current_cup, maxi):
+def move(current_cup, maxi, node_dict):
     
     # Splice three cups to the right
     spliced_start = current_cup.right
@@ -72,15 +72,16 @@ def move(current_cup, maxi):
         while value in spliced_values:
             value -= 1
     # maxi = current_cup.val
-    while value != next_cup.val:
-        # if next_cup.val == original_value:
-        #     value -= 1
-        #     if value <= 0:
-        #         value = maxi
-        # if maxi < next_cup.val:
-        #     maxi = next_cup.val
+    # while value != next_cup.val:
+    #     # if next_cup.val == original_value:
+    #     #     value -= 1
+    #     #     if value <= 0:
+    #     #         value = maxi
+    #     # if maxi < next_cup.val:
+    #     #     maxi = next_cup.val
 
-        next_cup = next_cup.right
+    #     next_cup = next_cup.right
+    next_cup = node_dict[value]
     next_cup.right.left = spliced_stop
     spliced_stop.right = next_cup.right
     next_cup.right = spliced_start
@@ -95,9 +96,16 @@ if __name__=='__main__':
 
     # part 1
     # a = set_up(sample)
+
+    # start_node = a
+    # node_dict = {a.val:a}
+    # a = a.right
+    # while a != start_node:
+    #     node_dict[a.val] = a
+    #     a = a.right
     
     # for i in range(2,102):
-    #     a = move(a,9)
+    #     a = move(a,9, node_dict)
     #     print(f'{i} : {a.display()}')
     # print(a.display())
     # while a.val != 1:
@@ -109,11 +117,21 @@ if __name__=='__main__':
     print(f'Start: {start}')
     a = set_up_part2(sample)
     # print(a.display())
+    print('Creating Node Dictionary')
+    start_node = a
+    node_dict = {a.val:a}
+    a = a.right
+    while a != start_node:
+        node_dict[a.val] = a
+        a = a.right
+    
     print('Parsed input')
     currentloop = time.time()+ 30
     last_i = 2
+    highestNode = max(node_dict)
+    print(highestNode)
     for i in range(2,10000002):
-        a = move(a, 100000)
+        a = move(a, highestNode, node_dict)
         if time.time() > currentloop:
             loop_time = time.time() - (currentloop - 30)
             remaining_seconds = ((10000002 - i)/ (i-last_i)) * loop_time
@@ -124,4 +142,6 @@ if __name__=='__main__':
     # print(a.display())
     while a.val != 1:
         a = a.right
-    print(a.display())
+    # print(a.display())
+    print(f"Finished in {round(time.time()- start)} seconds")
+    print(a.right.val, a.right.right.val, "=", a.right.val * a.right.right.val)
