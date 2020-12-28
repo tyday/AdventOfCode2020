@@ -111,7 +111,7 @@ class Tiles:
                     # we are on the top edge
                     if j == 0:
                         # We are on the corner
-                        tile_map[i][j] == self.corner_pieces.pop()
+                        tile_map[i][j] = self.corner_pieces.pop()
                     elif j == 1:
                         left_tile = tile_map[i][j-1]
                         piece = self.neighbors[left_tile.name][0]
@@ -123,16 +123,59 @@ class Tiles:
                         # we are a corner piece
                         left_tile = tile_map[i][j-1]
                         neighbors = self.neighbors[left_tile.name]
-                        piece = set(neighbors).intersection(set(self.corner_pieces))
+                        piece = list(set(neighbors).intersection(set(self.corner_pieces)))[0]
                         tile_map[i][j] = piece
                         self.corner_pieces.remove(piece)
                     else:
                         # We are an edge piece
                         left_tile = tile_map[i][j-1]
                         neighbors = self.neighbors[left_tile.name]
-                        piece = set(neighbors).intersection(set(self.edge_pieces))
+                        piece = list(set(neighbors).intersection(set(self.edge_pieces)))[0]
                         tile_map[i][j] = piece
                         self.edge_pieces.remove(piece)
+                elif i == 11:
+                    # we are at the bottom edge
+                    if j == 0 or j == 11:
+                        # we are on the corner
+                        top_tile = tile_map[i-1][j]
+                        neighbors = self.neighbors[top_tile.name]
+                        piece = list(set(neighbors).intersection(set(self.corner_pieces)))[0]
+                        
+                        if piece not in self.corner_pieces:
+                            raise Exception(f'Expected piece "{piece}" not found in self.corner_pieces')
+                        tile_map[i][j] = piece
+                        self.corner_pieces.remove(piece)
+                    else:
+                        top_tile = tile_map[i-1][j]
+                        left_tile = tile_map[i][j-1]
+                        top_neighbors = self.neighbors[top_tile.name]
+                        left_neighbors = self.neighbors[left_tile.name]
+                        piece = list(set(left_neighbors).intersection(set(self.edge_pieces), set(top_neighbors)))[0]
+
+                        tile_map[i][j] = piece
+                        self.edge_pieces.remove(piece)
+                else:
+                    if j == 0 or j == 11:
+                        # we are on the edge
+                        top_tile = tile_map[i-1][j]
+                        neighbors = self.neighbors[top_tile.name]
+                        piece = list(set(neighbors).intersection(set(self.edge_pieces)))[0]
+                        
+                        if piece not in self.edge_pieces:
+                            raise Exception(f'Expected piece "{piece}" not found in self.edge_pieces')
+                        tile_map[i][j] = piece
+                        self.edge_pieces.remove(piece)
+                    else:
+                        top_tile = tile_map[i-1][j]
+                        left_tile = tile_map[i][j-1]
+                        top_neighbors = self.neighbors[top_tile.name]
+                        left_neighbors = self.neighbors[left_tile.name]
+                        piece = list(set(left_neighbors).intersection(set(self.internal_pieces), set(top_neighbors)))[0]
+
+                        tile_map[i][j] = piece
+                        self.internal_pieces.remove(piece)
+        self.tile_map = tile_map
+
 
 def pickle_tiles(totalImage,fileName="tiles"):
     with open(fileName, 'wb') as f:
@@ -153,8 +196,11 @@ if __name__=='__main__':
     # a.rotLeft()
     # print(a.tile)
 
-    totalImage = Tiles(tiles)
-    totalImage.neighbor_report()
+    # totalImage = Tiles(tiles)
+    # totalImage.neighbor_report()
 
-    pickle_tiles(totalImage, '/home/pi/Programming/AdventOfCode/2020/Day20/tiles.txt')
+    # pickle_tiles(totalImage, '/home/pi/Programming/AdventOfCode/2020/Day20/tiles.txt')
+
+    totalImage = unpickle_tiles('/home/pi/Programming/AdventOfCode/2020/Day20/tiles.txt')
+    totalImage.find_pieces()
     print('End')
